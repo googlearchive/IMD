@@ -1,6 +1,6 @@
 # Imports Module Definition
 
-![](http://xkcd.com/927/)
+[![](http://imgs.xkcd.com/comics/standards.png)](http://xkcd.com/927/)
 
 Because the world needs another module registry!
 
