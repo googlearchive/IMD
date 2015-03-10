@@ -33,10 +33,6 @@
    */
   function define(id, dependencies, factory) {
     factory = factory || dependencies || id;
-    // TODO(nevir): Assign directly as exports if not a function.
-    if (typeof factory !== 'function') {
-      throw new TypeError('The last argument to define() must be a function');
-    }
     if (!Array.isArray(dependencies)) {
       // TODO(nevir): Default dependencies should be require, exports, module.
       dependencies = Array.isArray(id) ? id : [];
@@ -56,7 +52,7 @@
     // 
     // TODO(nevir): This is naive; doesn't support the vulcanize case.
     var base = inferredId.match(/^(.*?)[^\/]*$/)[1];
-    _modules[id] = _withDependencies(base, dependencies, factory);
+    _modules[id] = _runFactory(base, dependencies, factory);
     return _modules[id];
   }
   
@@ -85,9 +81,11 @@
    *
    * @param {string} base The base path that modules should be relative to.
    * @param {Array<string>} dependencies
-   * @param {function(...*)} factory
+   * @param {function(...*)|*} factory
    */
-  function _withDependencies(base, dependencies, factory) {
+  function _runFactory(base, dependencies, factory) {
+    if (typeof factory !== 'function') return factory;
+    
     var modules = dependencies.map(function(id) {
       id = _resolveRelativeId(base, id);
       if (!(id in _modules)) {
