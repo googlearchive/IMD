@@ -9,12 +9,12 @@
  */
 (function(scope) {
   'use strict';
-  
+
   /** @type {Object<key, *>} A mapping of ids to modules. */
   var _modules = Object.create(null);
-  
+
   // `define`
-  
+
   /**
    * An AMD-compliant implementation of `define` that does not perform loading.
    *
@@ -49,33 +49,38 @@
       throw new Error('The module "' + id + '" has already been defined');
     }
     // Extract the entire module path up to the file name. Aka `dirname()`.
-    // 
+    //
     // TODO(nevir): This is naive; doesn't support the vulcanize case.
     var base = inferredId.match(/^(.*?)[^\/]*$/)[1];
     _modules[id] = _runFactory(base, dependencies, factory);
     return _modules[id];
   }
-  
+
   // Semi-private. We expose this for tests & introspection.
   define._modules = _modules;
-  
+
   /**
    * Let other implementations know that this is an AMD implementation.
    * @see https://github.com/amdjs/amdjs-api/wiki/AMD#defineamd-property-
    */
   define.amd = {};
-  
+
   // Utility
-  
+
   /** @return {string} A module id inferred from the current document/import. */
   function _inferModuleId() {
-    var doc = document.currentScript && document.currentScript.ownerDocument || document;
+    var script = document.currentScript;
+    if (script.hasAttribute('as')) {
+      return script.getAttribute('as');
+    }
+
+    var doc = script && script.ownerDocument || document;
     if (!doc.baseURI) {
       throw new Error('Unable to determine a module id: No baseURI for the document');
     }
     return doc.baseURI;
   }
-  
+
   /**
    * Calls `factory` with the exported values of `dependencies`.
    *
@@ -85,7 +90,7 @@
    */
   function _runFactory(base, dependencies, factory) {
     if (typeof factory !== 'function') return factory;
-    
+
     var modules = dependencies.map(function(id) {
       id = _resolveRelativeId(base, id);
       if (!(id in _modules)) {
@@ -95,7 +100,7 @@
     });
     return factory.apply(null, modules);
   }
-  
+
   /**
    * @param {string} base The module path/URI that acts as the relative base.
    * @param {string} id The module ID that should be relatively resolved.
@@ -124,7 +129,7 @@
     }
     return prefix + terms.join('/');
   }
-  
+
   // Exports
   scope.define = define;
 

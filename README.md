@@ -41,6 +41,13 @@ define(function() {
 </script>
 ```
 
+And if you want to use an anonymous module (say, something defined following the
+[UMD pattern](https://github.com/umdjs/umd)), give it a name:
+
+```html
+<script src="thingo.js" as="thingy"></script>
+```
+
 
 ## That's Dumb!
 
