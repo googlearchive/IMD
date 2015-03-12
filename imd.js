@@ -78,6 +78,11 @@
     if (!doc.baseURI) {
       throw new Error('Unable to determine a module id: No baseURI for the document');
     }
+
+    if (script.hasAttribute('src')) {
+      return new URL(script.getAttribute('src'), doc.baseURI).toString();
+    }
+
     return doc.baseURI;
   }
 
