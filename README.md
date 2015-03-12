@@ -16,7 +16,7 @@ a particular module registry.
 You load your dependencies (or instruct your users to), and `define` them in
 proper AMD fashion. That's it!
 
-Public modules are defined by name
+Public modules are defined by name:
 
 `squidbits.html`:
 ```html
@@ -29,6 +29,8 @@ define('squidbits', ['./tentacles.html', 'ink'], function(tentacles, ink) {
 });
 </script>
 ```
+
+_Note that we're assuming that `ink.js` defines a `ink` module here, and `tentacles.html` defines an anonymous module_
 
 Private (relative) modules' names are inferred from the current import:
 
