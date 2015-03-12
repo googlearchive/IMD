@@ -30,7 +30,8 @@ define('squidbits', ['./tentacles.html', 'ink'], function(tentacles, ink) {
 </script>
 ```
 
-_Note that we're assuming that `ink.js` defines a `ink` module here, and `tentacles.html` defines an anonymous module_
+_Note that we're assuming that `ink.js` defines a `ink` module here, and
+`tentacles.html` defines an anonymous module._
 
 Private (relative) modules' names are inferred from the current import:
 
