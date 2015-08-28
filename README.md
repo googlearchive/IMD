@@ -82,7 +82,7 @@ Modules are defined exactly as in other AMD systems like RequireJS:
 Public modules are defined by name:
 
 Here's the definition of a mythical module, 'squidbits', that depnds on the
-modules 'tenticals.html', and 'ink':
+modules 'tentacles.html', and 'ink':
 
 ```javascript
 define('squidbits', ['./tentacles.html', 'ink'], function(tentacles, ink) {
@@ -104,9 +104,9 @@ define('squidbits', ['./tentacles.html', 'ink'], function(tentacles, ink) {
 </script>
 ```
 
-Notice the `<link>` and `<scrip>` tags. These tell the browser to load
-'tenticals.html' and 'ink.js'. Because scripts are blocked until imports and
-other scripts have loaded and run, and 'tenticals.html' and 'ink.js' define
+Notice the `<link>` and `<script>` tags. These tell the browser to load
+'tentacles.html' and 'ink.js'. Because scripts are blocked until imports and
+other scripts have loaded and run, and 'tentacles.html' and 'ink.js' define
 modules, `squidbits`'s dependencies are guaranteed to be loaded and registered
 when the inline script runs.
 
