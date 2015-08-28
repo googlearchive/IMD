@@ -52,7 +52,7 @@
     //
     // TODO(nevir): This is naive; doesn't support the vulcanize case.
     var base = inferredId.match(/^(.*?)[^\/]*$/)[1];
-    _modules[id] = _runFactory(base, dependencies, factory);
+    _modules[id] = _runFactory(id, base, dependencies, factory);
     return _modules[id];
   }
 
@@ -89,21 +89,30 @@
   /**
    * Calls `factory` with the exported values of `dependencies`.
    *
+   * @param {string} id The id of the module defined by the factory.
    * @param {string} base The base path that modules should be relative to.
    * @param {Array<string>} dependencies
    * @param {function(...*)|*} factory
    */
-  function _runFactory(base, dependencies, factory) {
+  function _runFactory(moduleId, base, dependencies, factory) {
     if (typeof factory !== 'function') return factory;
 
+    var exports, module;
     var modules = dependencies.map(function(id) {
-      id = _resolveRelativeId(base, id);
-      if (!(id in _modules)) {
-        throw new ReferenceError('The module "' + id + '" has not been loaded');
+      if (id === 'exports') {
+        return exports = {};
       }
-      return _modules[id];
+      if (id === 'require') {
+        return _require;
+      }
+      if (id === 'module') {
+        return module = {id: moduleId};
+      }
+      id = _resolveRelativeId(base, id);
+      return _require(id);
     });
-    return factory.apply(null, modules);
+    var result = factory.apply(null, modules);
+    return (module && module.exports) || exports || result;
   }
 
   /**
@@ -133,6 +142,13 @@
       }
     }
     return prefix + terms.join('/');
+  }
+
+  function _require(id) {
+    if (!(id in _modules)) {
+      throw new ReferenceError('The module "' + id + '" has not been loaded');
+    }
+    return _modules[id];
   }
 
   // Exports
