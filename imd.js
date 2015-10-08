@@ -69,7 +69,7 @@
 
   /** @return {string} A module id inferred from the current document/import. */
   function _inferModuleId() {
-    var script = document.currentScript;
+    var script = document._currentScript || document.currentScript;
     if (script.hasAttribute('as')) {
       return script.getAttribute('as');
     }
