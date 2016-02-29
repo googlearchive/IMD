@@ -1,0 +1,73 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title><%= name %> test</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <link rel="import" href="../imd.html">
+  </head>
+  <body>
+    <script>
+      suite('basic', () => {
+
+        setup(() => {
+          // clear the global set of modules before each test
+          Object.keys(define._modules).forEach((key) => {
+            delete define._modules[key];
+          });
+        });
+
+        test('a module with no dependencies is executed', () => {
+          let ran = false;
+          let m = {};
+          let module = define('test1', () => {
+            ran = true;
+            return m;
+          });
+          assert.isTrue(ran);
+          assert.strictEqual(module, m);
+        });
+
+        test('a module with no id is executed', () => {
+          let ran = false;
+          let m = {};
+          let module = define(() => {
+            ran = true;
+            return m;
+          });
+          assert.isTrue(ran);
+          assert.strictEqual(module, m);
+        });
+
+        test('default dependencies are requre, exports, module', () => {
+          define('test-module', (require, exports, module) => {
+            assert.typeOf(require, 'function');
+            assert.deepEqual(exports, {});
+            assert.equal(module.id, 'test-module');
+          });
+        });
+
+        test('a defined dependency is loaded', () => {
+          let aModule = {};
+          define('a', aModule);
+          define('b', ['a'], (a) => {
+            assert.strictEqual(a, aModule);
+          });
+        });
+
+        test('a relative dependency is loaded', () => {
+          let aModule = {};
+          define('m/a', aModule);
+          // make sure that './a' resolves to 'm/a' when loaded from 'm'
+          define('m', ['./a'], (a) => {
+            assert.strictEqual(a, aModule);
+          });
+        });
+
+      });
+    </script>
+  </body>
+</html>
