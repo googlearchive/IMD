@@ -11,5 +11,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/PolymerLabs/imd.git"
+  },
+  "devDependencies": {
+    "web-component-tester": "^4.2.1"
   }
 }
